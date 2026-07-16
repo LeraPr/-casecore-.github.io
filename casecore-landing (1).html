@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CaseCore — Технологии. Надёжность. Результат.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0a0f;
+    --bg-soft: #0d0e15;
+    --surface: #14151d;
+    --surface-2: #191b25;
+    --border: #24252f;
+    --border-soft: #1c1d27;
+    --text-1: #f3f4f7;
+    --text-2: #9a9cac;
+    --text-3: #6b6d7d;
+    --accent-1: #6366f1;
+    --accent-2: #22d3ee;
+    --grad: linear-gradient(120deg, var(--accent-1), var(--accent-2));
+    --radius: 16px;
+    --radius-sm: 10px;
+    --maxw: 1180px;
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+  html{ scroll-behavior: smooth; }
+  body{
+    background: var(--bg);
+    color: var(--text-1);
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  h1,h2,h3{
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text-1);
+  }
+  .mono{ font-family: 'JetBrains Mono', monospace; }
+  a{ color: inherit; text-decoration: none; }
+  ul{ list-style:none; }
+  img,svg{ display:block; max-width:100%; }
+  .container{
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  ::selection{ background: var(--accent-1); color: #fff; }
+  :focus-visible{ outline: 2px solid var(--accent-2); outline-offset: 3px; border-radius: 4px; }
+
+  /* ---------- background ambience ---------- */
+  .ambient{
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(600px 400px at 85% 8%, rgba(99,102,241,0.16), transparent 60%),
+      radial-gradient(500px 350px at 10% 40%, rgba(34,211,238,0.08), transparent 60%);
+  }
+
+  /* ---------- nav ---------- */
+  header{
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(10,10,15,0.72);
+    backdrop-filter: blur(14px) saturate(140%);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  nav{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    padding: 20px 32px;
+    max-width: var(--maxw);
+    margin: 0 auto;
+  }
+  .logo{
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    letter-spacing: -0.02em;
+  }
+  .logo-mark{
+    width: 26px; height:26px;
+    flex-shrink:0;
+    display:block;
+  }
+  .nav-links{
+    display:flex;
+    gap: 36px;
+    font-size: 14.5px;
+    color: var(--text-2);
+  }
+  .nav-links a{ transition: color .2s ease; }
+  .nav-links a:hover{ color: var(--text-1); }
+  .nav-cta{
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    color: var(--text-1);
+    transition: border-color .2s ease, background .2s ease;
+    white-space: nowrap;
+  }
+  .nav-cta:hover{ border-color: var(--accent-2); background: rgba(34,211,238,0.06); }
+  .nav-toggle{ display:none; }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position: relative;
+    z-index: 1;
+    padding: 110px 0 90px;
+  }
+  .hero .container{
+    display:grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 40px;
+    align-items:center;
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--text-2);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+  }
+  .eyebrow .dot{
+    width: 6px; height: 6px; border-radius:50%;
+    background: var(--accent-2);
+    box-shadow: 0 0 8px var(--accent-2);
+  }
+  .hero h1{
+    font-size: clamp(38px, 5vw, 58px);
+    line-height: 1.08;
+    margin-bottom: 26px;
+  }
+  .hero h1 span{
+    background: var(--grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero p{
+    color: var(--text-2);
+    font-size: 17px;
+    max-width: 480px;
+    margin-bottom: 20px;
+  }
+  .hero-actions{
+    display:flex;
+    gap: 14px;
+    margin-top: 36px;
+  }
+  .btn-primary{
+    background: var(--text-1);
+    color: var(--bg);
+    padding: 14px 26px;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: transform .2s ease, box-shadow .2s ease;
+    display:inline-block;
+  }
+  .btn-primary:hover{ transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,255,255,0.12); }
+  .btn-secondary{
+    padding: 14px 26px;
+    border-radius: 100px;
+    font-weight: 500;
+    font-size: 15px;
+    border: 1px solid var(--border);
+    color: var(--text-1);
+    transition: border-color .2s ease;
+  }
+  .btn-secondary:hover{ border-color: var(--text-2); }
+
+  /* ---------- hero visual (signature "core") ---------- */
+  .hero-visual{
+    position: relative;
+    aspect-ratio: 1/1;
+    max-width: 460px;
+    justify-self: center;
+  }
+  .core-svg{ width: 100%; height: 100%; }
+  .core-rotate{
+    transform-origin: 230px 230px;
+    animation: coreRotate 34s linear infinite;
+  }
+  .core-rotate-rev{
+    transform-origin: 230px 230px;
+    animation: coreRotateRev 46s linear infinite;
+  }
+  .core-pulse{ animation: corePulse 4.5s ease-in-out infinite; }
+  @keyframes coreRotate{ from{ transform: rotate(0deg);} to{ transform: rotate(360deg);} }
+  @keyframes coreRotateRev{ from{ transform: rotate(360deg);} to{ transform: rotate(0deg);} }
+  @keyframes corePulse{
+    0%,100%{ opacity: .55; }
+    50%{ opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .core-rotate, .core-rotate-rev, .core-pulse{ animation: none; }
+  }
+
+  /* ---------- section shells ---------- */
+  section{ position: relative; z-index: 1; padding: 100px 0; }
+  .section-head{
+    max-width: 640px;
+    margin-bottom: 60px;
+  }
+  .section-tag{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--accent-2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 14px;
+    display:block;
+  }
+  .section-head h2{
+    font-size: clamp(28px, 3.4vw, 38px);
+    margin-bottom: 18px;
+  }
+  .section-head p{
+    color: var(--text-2);
+    font-size: 16px;
+  }
+
+  /* ---------- about ---------- */
+  .about{ border-top: 1px solid var(--border-soft); }
+  .about-body p{
+    color: var(--text-2);
+    font-size: 17px;
+    max-width: 720px;
+    margin-bottom: 20px;
+  }
+  .about-body strong{ color: var(--text-1); font-weight: 500; }
+
+  /* ---------- services ---------- */
+  .services{ border-top: 1px solid var(--border-soft); }
+  .card-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .card{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    transition: transform .25s ease, border-color .25s ease, background .25s ease;
+  }
+  .card:hover{
+    transform: translateY(-4px);
+    border-color: rgba(99,102,241,0.4);
+    background: var(--surface-2);
+  }
+  .card-icon{
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom: 22px;
+  }
+  .card-icon svg{ width: 22px; height: 22px; }
+  .card h3{
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .card p{
+    color: var(--text-2);
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+  .card.wide{ grid-column: span 1; }
+
+  /* ---------- why us ---------- */
+  .why{ border-top: 1px solid var(--border-soft); }
+  .why-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border-soft);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    overflow:hidden;
+  }
+  .why-item{
+    background: var(--bg-soft);
+    padding: 34px 30px;
+    display:flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: background .2s ease;
+  }
+  .why-item:hover{ background: var(--surface); }
+  .why-check{
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: rgba(99,102,241,0.12);
+    border: 1px solid rgba(99,102,241,0.3);
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .why-check svg{ width: 15px; height: 15px; }
+  .why-item span{ font-size: 15.5px; font-weight: 500; color: var(--text-1); }
+
+  /* ---------- cta strip ---------- */
+  .cta-strip{
+    border-top: 1px solid var(--border-soft);
+  }
+  .cta-box{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 64px 60px;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    gap: 40px;
+    position: relative;
+    overflow:hidden;
+  }
+  .cta-box::before{
+    content:"";
+    position:absolute;
+    inset: -40% -10% auto auto;
+    width: 420px; height: 420px;
+    background: radial-gradient(circle, rgba(99,102,241,0.22), transparent 70%);
+    pointer-events:none;
+  }
+  .cta-box h2{ font-size: 30px; max-width: 460px; position:relative; }
+  .cta-box p{ color: var(--text-2); margin-top: 10px; position:relative; }
+
+  /* ---------- footer ---------- */
+  footer{
+    border-top: 1px solid var(--border-soft);
+    padding: 56px 0 40px;
+  }
+  .footer-grid{
+    display:flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  .footer-brand .logo{ margin-bottom: 14px; }
+  .footer-brand p{ color: var(--text-3); font-size: 14px; max-width: 280px; }
+  .footer-col-title{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+    margin-bottom: 14px;
+  }
+  .footer-address{ color: var(--text-2); font-size: 14.5px; line-height: 1.7; max-width: 260px; }
+  .footer-contacts{ color: var(--text-3); font-size: 14.5px; font-style: normal; }
+  .footer-bottom{
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    padding-top: 28px;
+    border-top: 1px solid var(--border-soft);
+    color: var(--text-3);
+    font-size: 13px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* ---------- reveal on scroll ---------- */
+  .reveal{
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.in{ opacity: 1; transform: none; }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 900px){
+    .hero .container{ grid-template-columns: 1fr; }
+    .hero-visual{ order: -1; max-width: 320px; margin: 0 auto 20px; }
+    .card-grid{ grid-template-columns: repeat(2, 1fr); }
+    .why-grid{ grid-template-columns: repeat(2, 1fr); }
+    .cta-box{ flex-direction: column; align-items: flex-start; padding: 44px 32px; }
+  }
+  @media (max-width: 640px){
+    .container{ padding: 0 20px; }
+    nav{ padding: 18px 20px; }
+    .nav-links{ display:none; }
+    .card-grid{ grid-template-columns: 1fr; }
+    .why-grid{ grid-template-columns: 1fr; }
+    section{ padding: 70px 0; }
+    .hero{ padding: 70px 0 60px; }
+    .footer-grid{ flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient"></div>
+
+<header>
+  <nav>
+    <a href="#" class="logo"><svg class="logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="logoMarkGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#2563EB"/>
+          <stop offset="1" stop-color="#38BDF8"/>
+        </linearGradient>
+      </defs>
+      <g transform="translate(50,50)" fill="url(#logoMarkGrad)">
+        <path d="M0,-42 C16,-30 16,-14 0,-8 C-16,-14 -16,-30 0,-42 Z"/>
+        <path d="M0,-42 C16,-30 16,-14 0,-8 C-16,-14 -16,-30 0,-42 Z" transform="rotate(90)"/>
+        <path d="M0,-42 C16,-30 16,-14 0,-8 C-16,-14 -16,-30 0,-42 Z" transform="rotate(180)"/>
+        <path d="M0,-42 C16,-30 16,-14 0,-8 C-16,-14 -16,-30 0,-42 Z" transform="rotate(270)"/>
+      </g>
+    </svg>CaseCore</a>
+    <div class="nav-links">
+      <a href="#about">О компании</a>
+      <a href="#services">Услуги</a>
+      <a href="#why">Почему мы</a>
+      <a href="#contact">Контакты</a>
+    </div>
+    <a href="#contact" class="nav-cta">Обсудить проект</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div>
+        <span class="eyebrow"><span class="dot"></span>Российская ИТ-компания</span>
+        <h1>Технологии.<br>Надёжность.<br><span>Результат.</span></h1>
+        <p>CaseCore разрабатывает программное обеспечение и цифровые решения для бизнеса — от корпоративных систем до облачной инфраструктуры.</p>
+        <div class="hero-actions">
+          <a href="#contact" class="btn-primary">Обсудить проект</a>
+          <a href="#services" class="btn-secondary">Смотреть услуги</a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <svg class="core-svg" viewBox="0 0 460 460" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#6366f1"/>
+              <stop offset="1" stop-color="#22d3ee"/>
+            </linearGradient>
+            <radialGradient id="g2" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0" stop-color="#6366f1" stop-opacity="0.5"/>
+              <stop offset="1" stop-color="#6366f1" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <circle cx="230" cy="230" r="200" fill="url(#g2)" opacity="0.5"/>
+
+          <!-- outer orbit ring with nodes -->
+          <g class="core-rotate">
+            <circle cx="230" cy="230" r="170" stroke="#24252f" stroke-width="1"/>
+            <circle cx="230" cy="60" r="5" fill="#22d3ee" class="core-pulse"/>
+            <circle cx="400" cy="230" r="4" fill="#6366f1"/>
+            <circle cx="80" cy="330" r="4" fill="#6366f1"/>
+          </g>
+
+          <!-- inner orbit ring, reverse -->
+          <g class="core-rotate-rev">
+            <circle cx="230" cy="230" r="120" stroke="#24252f" stroke-width="1" stroke-dasharray="2 6"/>
+            <circle cx="350" cy="150" r="4" fill="#22d3ee" class="core-pulse"/>
+            <circle cx="120" cy="290" r="3.5" fill="#6366f1"/>
+          </g>
+
+          <!-- central core: interlocking facets -->
+          <g transform="translate(230,230)">
+            <polygon points="0,-70 60,-35 60,35 0,70 -60,35 -60,-35" fill="#14151d" stroke="url(#g1)" stroke-width="1.5"/>
+            <polygon points="0,-70 60,-35 0,0" fill="url(#g1)" opacity="0.28"/>
+            <polygon points="60,-35 60,35 0,0" fill="url(#g1)" opacity="0.14"/>
+            <polygon points="60,35 0,70 0,0" fill="url(#g1)" opacity="0.24"/>
+            <polygon points="0,70 -60,35 0,0" fill="url(#g1)" opacity="0.1"/>
+            <polygon points="-60,35 -60,-35 0,0" fill="url(#g1)" opacity="0.22"/>
+            <polygon points="-60,-35 0,-70 0,0" fill="url(#g1)" opacity="0.16"/>
+            <circle r="7" fill="#f3f4f7"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-tag">О компании</span>
+        <h2>Технологии. Надёжность. Результат.</h2>
+      </div>
+      <div class="about-body reveal">
+        <p><strong>CaseCore</strong> — российская ИТ-компания, специализирующаяся на разработке программного обеспечения и современных цифровых решений.</p>
+        <p>Мы создаём надёжные системы для бизнеса, разрабатываем мобильные приложения, внедряем облачные технологии и помогаем компаниям безопасно развивать цифровую инфраструктуру.</p>
+        <p>Наша задача — создавать продукты, которые работают стабильно, масштабируются вместе с бизнесом и приносят реальную пользу.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services" id="services">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-tag">Услуги</span>
+        <h2>Чем мы занимаемся</h2>
+        <p>Полный цикл разработки — от идеи и архитектуры до сопровождения в проде.</p>
+      </div>
+
+      <div class="card-grid">
+        <div class="card reveal">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="url(#gIcon)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <defs><linearGradient id="gIcon" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+              <polyline points="8 6 3 12 8 18"></polyline>
+              <polyline points="16 6 21 12 16 18"></polyline>
+            </svg>
+          </div>
+          <h3>Разработка ПО</h3>
+          <p>Веб-сервисы, корпоративные системы и индивидуальные решения под задачи бизнеса.</p>
+        </div>
+
+        <div class="card reveal">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#8b8dfa" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="7" y="2" width="10" height="20" rx="2"></rect>
+              <line x1="11" y1="18" x2="13" y2="18"></line>
+            </svg>
+          </div>
+          <h3>Мобильные приложения</h3>
+          <p>Разработка приложений для iOS и Android с единым продуктовым опытом.</p>
+        </div>
+
+        <div class="card reveal">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#5fd8ea" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+            </svg>
+          </div>
+          <h3>Облачные решения</h3>
+          <p>Проектирование и внедрение современной облачной инфраструктуры.</p>
+        </div>
+
+        <div class="card reveal">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#8b8dfa" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2 4 6v6c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V6l-8-4z"></path>
+            </svg>
+          </div>
+          <h3>Информационная безопасность</h3>
+          <p>Защита данных и обеспечение безопасности ИТ-систем на всех уровнях.</p>
+        </div>
+
+        <div class="card reveal">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#5fd8ea" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </div>
+          <h3>Техническая поддержка</h3>
+          <p>Сопровождение систем и оперативная помощь пользователям после запуска.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="why" id="why">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-tag">Почему мы</span>
+        <h2>Что стоит за каждым проектом</h2>
+      </div>
+
+      <div class="why-grid reveal">
+        <div class="why-item">
+          <div class="why-check"><svg viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <span>Современные технологии</span>
+        </div>
+        <div class="why-item">
+          <div class="why-check"><svg viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <span>Индивидуальный подход</span>
+        </div>
+        <div class="why-item">
+          <div class="why-check"><svg viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <span>Надёжные решения</span>
+        </div>
+        <div class="why-item">
+          <div class="why-check"><svg viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <span>Масштабируемая архитектура</span>
+        </div>
+        <div class="why-item">
+          <div class="why-check"><svg viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <span>Соблюдение сроков</span>
+        </div>
+        <div class="why-item">
+          <div class="why-check"><svg viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <span>Поддержка после запуска</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-strip">
+    <div class="container">
+      <div class="cta-box reveal">
+        <div>
+          <h2>Готовы обсудить задачу?</h2>
+          <p>Расскажите, что нужно построить — предложим решение и оценим сроки.</p>
+        </div>
+        <a href="#contact" class="btn-primary">Написать нам</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer id="contact">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="logo"><svg class="logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="logoMarkGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#2563EB"/>
+          <stop offset="1" stop-color="#38BDF8"/>
+        </linearGradient>
+      </defs>
+      <g transform="translate(50,50)" fill="url(#logoMarkGrad)">
+        <path d="M0,-42 C16,-30 16,-14 0,-8 C-16,-14 -16,-30 0,-42 Z"/>
+        <path d="M0,-42 C16,-30 16,-14 0,-8 C-16,-14 -16,-30 0,-42 Z" transform="rotate(90)"/>
+        <path d="M0,-42 C16,-30 16,-14 0,-8 C-16,-14 -16,-30 0,-42 Z" transform="rotate(180)"/>
+        <path d="M0,-42 C16,-30 16,-14 0,-8 C-16,-14 -16,-30 0,-42 Z" transform="rotate(270)"/>
+      </g>
+    </svg>CaseCore</a>
+        <p>Российская ИТ-компания: разработка ПО, мобильные приложения, облачные решения и информационная безопасность.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Адрес</div>
+        <div class="footer-address">105064, Москва,<br>ул. Земляной Вал, 9,<br>этаж 4, офис № 4043</div>
+      </div>
+      <div>
+        <div class="footer-col-title">Контакты</div>
+        <div class="footer-contacts">Скоро здесь появятся телефон и почта</div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 CaseCore</span>
+      <span class="mono">Технологии. Надёжность. Результат.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
